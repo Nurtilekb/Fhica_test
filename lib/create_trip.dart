@@ -9,7 +9,7 @@ class CreateTrip extends StatefulWidget {
 }
 
 class _CreateTripState extends State<CreateTrip> {
-  List<bool> _checkboxValues = List<bool>.filled(10, false);
+  List<bool> _checkboxValues = List<bool>.filled(1000000, false);
   List contrys = <String>[
     "Paris",
     "Munich",
@@ -31,16 +31,32 @@ class _CreateTripState extends State<CreateTrip> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Create Trip',
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w800,
-            fontFamily: 'interTight',
-          ),
+        automaticallyImplyLeading: false,
+
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 20.r,
+              backgroundColor: Color(0xffE9E9E9),
+              child: Center(child: BackButton(color: Colors.black)),
+            ),
+            Spacer(),
+            Center(
+              child: Text(
+                'Create Trip',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w800,
+                  fontFamily: 'interTight',
+                ),
+              ),
+            ),
+            Spacer(),
+            SizedBox(width: 40.w, height: 40.h),
+          ],
         ),
       ),
-      body: Padding(
+      body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: SingleChildScrollView(
           child: Column(
@@ -56,6 +72,12 @@ class _CreateTripState extends State<CreateTrip> {
               ),
               SizedBox(height: 5.h),
               TextFormField(
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'interTight',
+                  color: Colors.black,
+                ),
                 decoration: InputDecoration(
                   hintText: 'Write a name trip',
                   hintStyle: TextStyle(
@@ -88,7 +110,7 @@ class _CreateTripState extends State<CreateTrip> {
               Column(
                 children: List.generate(lengthofList, (i) {
                   return Container(
-                    margin: EdgeInsets.only(bottom: 10.h),
+                    margin: EdgeInsets.only(bottom: 8.h),
                     decoration: BoxDecoration(
                       color: Color.fromARGB(20, 36, 47, 13),
                       borderRadius: BorderRadius.circular(8.r),
@@ -121,6 +143,29 @@ class _CreateTripState extends State<CreateTrip> {
                     ),
                   );
                 }),
+              ),
+              SizedBox(height: 90.h),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      _checkboxValues.where((value) => value).length > 1
+                          ? Color(0xFF00a5df)
+                          : Color(0xFFC4C4C4),
+                  minimumSize: Size(343.w, 56.h),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(32.r),
+                  ),
+                ),
+                onPressed: () {},
+                child: Text(
+                  'Create a trip',
+                  style: TextStyle(
+                    color: Color(0xFFEDFAFF),
+                    fontSize: 16.sp,
+                    fontFamily: "interTight",
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),
