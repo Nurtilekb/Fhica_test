@@ -66,7 +66,7 @@ class Trip_creat extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'Add a city',
+                  'Create a trip',
                   style: TextStyle(
                     color: Color(0xFFEDFAFF),
                     fontSize: 16.sp,

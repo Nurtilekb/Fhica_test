@@ -1,3 +1,4 @@
+import 'package:appp/list.trips/2.1.1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -32,7 +33,6 @@ class _CreateTripState extends State<CreateTrip> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-
         title: Row(
           children: [
             CircleAvatar(
@@ -156,7 +156,160 @@ class _CreateTripState extends State<CreateTrip> {
                     borderRadius: BorderRadius.circular(32.r),
                   ),
                 ),
-                onPressed: () {},
+                onPressed:
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    ///////// TUT NADO DOBAVVIT PACET HIVE CHTOBBY SOHRANIT DANNIE
+                    _checkboxValues.where((value) => value).length > 1
+                        ? () async {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(32.r),
+                                    topRight: Radius.circular(32.r),
+                                  ),
+                                ),
+                                height: 240.h,
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Center(
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                              top: 8.h,
+                                              bottom: 15.h,
+                                            ),
+                                            width: 104.w,
+                                            height: 4.h,
+                                            color: Color.fromARGB(
+                                              54,
+                                              84,
+                                              84,
+                                              85,
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Are you sure you want to come out?',
+                                              style: TextStyle(
+                                                fontSize: 18.sp,
+                                                fontFamily: 'interTight',
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 8.h),
+                                        Text(
+                                          'After exiting the process of adding a place, the data will be deleted',
+                                          style: TextStyle(
+                                            fontSize: 16.sp,
+                                            fontFamily: 'interTight',
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        SizedBox(height: 18.h),
+                                        Row(
+                                          children: [
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                shadowColor: Colors.white,
+                                                backgroundColor: Color(
+                                                  0xFFe9e9e9,
+                                                ),
+                                                minimumSize: Size(
+                                                  167.5.w,
+                                                  56.h,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        32.r,
+                                                      ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'Back',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16.sp,
+                                                  fontFamily: 'interTight',
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              onPressed:
+                                                  () => Navigator.pop(context),
+                                            ),
+                                            Spacer(),
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Color(
+                                                  0xFFe9e9e9,
+                                                ),
+                                                shadowColor: Colors.white,
+                                                minimumSize: Size(
+                                                  167.5.w,
+                                                  56.h,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        32.r,
+                                                      ),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                'Exit',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16.sp,
+                                                  fontFamily: 'interTight',
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              onPressed:
+                                                  () =>
+                                                      Navigator.pushAndRemoveUntil(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                                  MyHomePage(),
+                                                        ),
+                                                        (route) => false,
+                                                      ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        : null,
                 child: Text(
                   'Create a trip',
                   style: TextStyle(

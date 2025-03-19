@@ -10,11 +10,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // int _selectedIndex = 1;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /// Vot Syuda nado vstavit Spisok ot Triptov
+      /// /// Vot Syuda nado vstavit Spisok ot Triptov/// Vot Syuda nado vstavit Spisok ot Triptov
+      /// /// Vot Syuda nado vstavit Spisok ot Triptov/// Vot Syuda nado vstavit Spisok ot Triptov/// Vot Syuda nado vstavit Spisok ot Triptov/// Vot Syuda nado vstavit Spisok ot Triptov/// Vot Syuda nado vstavit Spisok ot Triptov
+      /// /// Vot Syuda nado vstavit Spisok ot Triptov
       body: Center(
         child: Container(
           padding: EdgeInsets.only(top: 90.h),
@@ -71,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 child: Text(
-                  'Create a trip',
+                  'Add a city',
                   style: TextStyle(
                     color: Color(0xFFEDFAFF),
                     fontSize: 16.sp,
@@ -84,101 +86,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      // bottomNavigationBar: NavBarr(
-      //   selectedIndex: _selectedIndex,
-      //   onitemtap: (index) {
-      //     setState(() {
-      //       _selectedIndex = index;
-      //     });
-      //   },
-      // ),
     );
   }
 }
-
-// class NavBarr extends StatefulWidget {
-//   const NavBarr({
-//     super.key,
-//     required this.selectedIndex,
-//     required this.onitemtap,
-//   });
-
-//   @override
-//   State<NavBarr> createState() => _NavBarrState();
-//   final int selectedIndex;
-//   final Function(int) onitemtap;
-// }
-
-// class _NavBarrState extends State<NavBarr> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return BottomNavigationBar(
-//       backgroundColor: Color(0xFFE9E9E9),
-//       type: BottomNavigationBarType.fixed,
-//       selectedItemColor: const Color(0xFF00a5df),
-//       unselectedItemColor: Color(0xff1D506266),
-//       currentIndex: widget.selectedIndex,
-//       onTap: widget.onitemtap,
-//       unselectedLabelStyle: TextStyle(
-//         fontFamily: "interTight",
-//         color: Color(0xff1D506266),
-//         fontSize: 11.sp,
-//         fontWeight: FontWeight.w500,
-//       ),
-//       items: <BottomNavigationBarItem>[
-//         BottomNavigationBarItem(
-//           icon: SizedBox(
-//             width: 18.w,
-//             height: 21.h,
-//             child: Image.asset(
-//               widget.selectedIndex == 0
-//                   ? 'assets/pngs/vector1.png'
-//                   : 'assets/pngs/vector1.png',
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//           label: 'Main',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: SizedBox(
-//             height: 18.75.h,
-//             width: 13.5.w,
-//             child: Image.asset(
-//               widget.selectedIndex == 1
-//                   ? 'assets/pngs/vector2.1.png'
-//                   : 'assets/pngs/vector2.png',
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//           label: 'Go Trip',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: SizedBox(
-//             width: 18.w,
-//             height: 18.75.h,
-//             child: Image.asset(
-//               widget.selectedIndex == 2
-//                   ? 'assets/pngs/vector3.png'
-//                   : 'assets/pngs/vector3.png',
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//           label: 'Analytics',
-//         ),
-//         BottomNavigationBarItem(
-//           icon: SizedBox(
-//             width: 19.62.w,
-//             height: 19.62.h,
-//             child: Image.asset(
-//               widget.selectedIndex == 3
-//                   ? 'assets/pngs/vector4.png'
-//                   : 'assets/pngs/vector4.png',
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//           label: 'Settings',
-//         ),
-//       ],
-//     );
-//   }
-// }
