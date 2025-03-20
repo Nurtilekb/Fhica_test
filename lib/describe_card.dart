@@ -1,7 +1,10 @@
 import 'package:appp/datas_of_city.dart';
-import 'package:appp/finance.dart';
+import 'package:appp/edit_trip.dart';
+import 'package:appp/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:flutter/gestures.dart';
 
 class DescribeCard extends StatefulWidget {
   const DescribeCard({super.key, required this.title, required this.cityies});
@@ -13,6 +16,195 @@ class DescribeCard extends StatefulWidget {
 }
 
 class _DescribeCardState extends State<DescribeCard> {
+  void show() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(32.r),
+              topRight: Radius.circular(32.r),
+            ),
+          ),
+          height: 190.h,
+          width: 350.w,
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 112.h,
+                    width: 359.w,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Edit',
+                              style: TextStyle(
+                                fontSize: 17.sp,
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'interTight',
+                                color: Colors.black,
+                              ),
+                              recognizer:
+                                  TapGestureRecognizer()
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) => EditTrip(
+                                                tripIndex: 1,
+                                                trip: Trip(
+                                                  name: widget.title,
+                                                  cities:
+                                                      widget.cityies
+                                                          .cast<String>(),
+                                                ),
+                                              ),
+                                        ),
+                                      );
+                                    },
+                            ),
+                          ),
+                        ),
+                        Divider(),
+                        SizedBox(height: 8.h),
+                        InkWell(
+                          onTap: () {
+                            _showDeleteModal();
+                          },
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 20.h,
+                            child: Center(
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'interTight',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        InkWell(
+                          onTap: () {
+                            // Handle the tap event
+                            print('Cancel tapped');
+                          },
+                          child: Expanded(
+                            child: Center(
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(
+                                  fontSize: 17.sp,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'interTight',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDeleteModal() {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Do you want to delete this Trip?',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'interTight',
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 20.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      'Cancel',
+                      style: TextStyle(fontSize: 16.sp, color: Colors.black),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    onPressed: () async {
+                      var box = Hive.box<Trip>(
+                        'trips',
+                      ); // Получаем открытый бокс
+
+                      // Поиск tripKey по названию
+                      dynamic tripKeyToDelete;
+                      for (var key in box.keys) {
+                        var trip = box.get(key);
+                        if (trip != null && trip.name == widget.title) {
+                          tripKeyToDelete = key;
+                          break;
+                        }
+                      }
+
+                      if (tripKeyToDelete != null) {
+                        await box.delete(tripKeyToDelete);
+                        print('Удален Trip с ключом: $tripKeyToDelete');
+                      } else {
+                        print('Trip не найден');
+                      }
+
+                      Navigator.pop(context); // Закрываем модальное окно
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Delete',
+                      style: TextStyle(fontSize: 16.sp, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   int selectedIndex = 0;
 
   @override
@@ -20,10 +212,8 @@ class _DescribeCardState extends State<DescribeCard> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
-
         title: Row(
           children: [
             CircleAvatar(
@@ -34,7 +224,7 @@ class _DescribeCardState extends State<DescribeCard> {
             Spacer(),
             Center(
               child: Text(
-                'Create Trip',
+                widget.title,
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
@@ -48,7 +238,9 @@ class _DescribeCardState extends State<DescribeCard> {
               backgroundColor: Color(0xffE9E9E9),
               child: Center(
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    show();
+                  },
                   icon: Icon(Icons.more_vert),
                 ),
               ),
@@ -159,7 +351,9 @@ class _DescribeCardState extends State<DescribeCard> {
               index: selectedIndex,
               children: [
                 Citydatas(citydatas: widget.cityies, name1: widget.title),
-                Finance(),
+                Container(
+                  child: Center(child: Text('Add your amounts in page')),
+                ),
               ],
             ),
           ),

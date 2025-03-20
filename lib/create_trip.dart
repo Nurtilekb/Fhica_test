@@ -288,6 +288,15 @@ class _CreateTripState extends State<CreateTrip> {
                                                   ),
                                                 ),
                                                 onPressed: () {
+                                                  tripNameController.clear();
+                                                  setState(() {
+                                                    _checkboxValues =
+                                                        List<bool>.filled(
+                                                          contrys.length,
+                                                          false,
+                                                        );
+                                                  });
+
                                                   Navigator.pop(context);
                                                 },
                                               ),

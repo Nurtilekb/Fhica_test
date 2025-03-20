@@ -1,11 +1,14 @@
 import 'package:appp/finance.dart';
 import 'package:appp/places_in_list.dart';
+import 'package:appp/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 
 class DescDesc extends StatefulWidget {
   const DescDesc({super.key, required this.name});
   final String name;
+
   @override
   State<DescDesc> createState() => _DescDescState();
 }
