@@ -1,6 +1,7 @@
 import 'package:appp/datas_of_city.dart';
 import 'package:appp/edit_trip.dart';
 import 'package:appp/trip_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
@@ -16,114 +17,49 @@ class DescribeCard extends StatefulWidget {
 }
 
 class _DescribeCardState extends State<DescribeCard> {
-  void show() {
-    showModalBottomSheet(
+  void showTripOptions(BuildContext context) {
+    showCupertinoModalPopup(
       context: context,
-      builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(32.r),
-              topRight: Radius.circular(32.r),
-            ),
-          ),
-          height: 190.h,
-          width: 350.w,
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 112.h,
-                    width: 359.w,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Edit',
-                              style: TextStyle(
-                                fontSize: 17.sp,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'interTight',
-                                color: Colors.black,
-                              ),
-                              recognizer:
-                                  TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => EditTrip(
-                                                tripIndex: 1,
-                                                trip: Trip(
-                                                  name: widget.title,
-                                                  cities:
-                                                      widget.cityies
-                                                          .cast<String>(),
-                                                ),
-                                              ),
-                                        ),
-                                      );
-                                    },
+      builder:
+          (context) => CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => EditTrip(
+                            tripIndex: 1,
+                            trip: Trip(
+                              name: widget.title, // Используй widget.name
+                              cities:
+                                  widget.cityies
+                                      .cast<
+                                        String
+                                      >(), // Или передай реальные города
                             ),
                           ),
-                        ),
-                        Divider(),
-                        SizedBox(height: 8.h),
-                        InkWell(
-                          onTap: () {
-                            _showDeleteModal();
-                          },
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: 20.h,
-                            child: Center(
-                              child: Text(
-                                'Delete',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 17.sp,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'interTight',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                        InkWell(
-                          onTap: () {
-                            // Handle the tap event
-                            print('Cancel tapped');
-                          },
-                          child: Expanded(
-                            child: Center(
-                              child: Text(
-                                'Cancel',
-                                style: TextStyle(
-                                  fontSize: 17.sp,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'interTight',
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
-                  ),
-                ],
+                  );
+                },
+                child: Text("Edit", style: TextStyle(fontSize: 17.sp)),
               ),
+              CupertinoActionSheetAction(
+                isDestructiveAction: true, // Красный цвет для удаления
+                onPressed: () {
+                  _showDeleteModal();
+                },
+                child: Text("Delete", style: TextStyle(fontSize: 17.sp)),
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel", style: TextStyle(fontSize: 17.sp)),
             ),
           ),
-        );
-      },
     );
   }
 
@@ -239,7 +175,7 @@ class _DescribeCardState extends State<DescribeCard> {
               child: Center(
                 child: IconButton(
                   onPressed: () {
-                    show();
+                    showTripOptions(context);
                   },
                   icon: Icon(Icons.more_vert),
                 ),
