@@ -1,3 +1,4 @@
+import 'package:appp/describe_card.dart';
 import 'package:appp/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,7 +40,7 @@ class _Trip_creatState extends State<Trip_creat> {
         valueListenable: tripBox.listenable(),
         builder: (context, Box<Trip> box, _) {
           if (box.isEmpty) {
-            return buildEmptyTripsUI(trips, context);
+            return __buildEmptyTripsUI(trips, context);
           } else {
             return buildTripsCard(box);
           }
@@ -75,31 +76,108 @@ class _Trip_creatState extends State<Trip_creat> {
                     child: Column(
                       children: List.generate(box.length, (index) {
                         final trip = box.getAt(index);
-                        return Card(
-                          margin: EdgeInsets.symmetric(vertical: 8.h),
-                          child: Container(
-                            height: 160.h,
-                            width: 343.w,
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    trip!.name,
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w600,
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => DescribeCard(
+                                      cityies: trip.cities,
+                                      title: trip.name,
                                     ),
-                                  ),
-                                  Text(
-                                    trip.cities.join(', '),
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
                               ),
+                            );
+                          },
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            margin: EdgeInsets.symmetric(vertical: 8.h),
+                            child: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: Image.asset(
+                                    'assets/pngs/planes.png', // Любая ссылка на картинку
+                                    fit: BoxFit.cover, // Заполняет весь Card
+                                  ),
+                                ),
+                                Container(
+                                  height: 160.h,
+                                  width: 343.w,
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          trip!.name,
+                                          style: TextStyle(
+                                            fontSize: 32.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white,
+                                            fontFamily: 'interTight',
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.all(4.w),
+                                              height: 23.h,
+
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                  59,
+                                                  255,
+                                                  255,
+                                                  255,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(16.r),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "  Places to visit: 39  ",
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.all(4.w),
+                                              height: 23.h,
+                                              width: 68.w,
+                                              decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                  59,
+                                                  255,
+                                                  255,
+                                                  255,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(16.r),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  "Cities: ${trip.cities.length.toString()}",
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -142,7 +220,7 @@ class _Trip_creatState extends State<Trip_creat> {
     );
   }
 
-  Widget buildEmptyTripsUI(dynamic trips, BuildContext context) {
+  Widget __buildEmptyTripsUI(dynamic trips, BuildContext context) {
     return Center(
       child: Container(
         color: Color.fromARGB(0, 19, 221, 232),
@@ -182,20 +260,7 @@ class _Trip_creatState extends State<Trip_creat> {
                 ),
               ),
             ),
-            if (trips.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  itemCount: trips.length,
-                  itemBuilder: (context, index) {
-                    final trip = trips[index];
-                    // Предполагая, что каждая поездка - это Map<String, dynamic>
-                    final tripName = trip.name;
-                    final cities = trip.cities.join(', ');
-                    print("       ${tripName}         ");
-                    return ImageCard(narmer: tripName, citys: cities);
-                  },
-                ),
-              ),
+
             SizedBox(height: 70.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -228,59 +293,59 @@ class _Trip_creatState extends State<Trip_creat> {
   }
 }
 
-class ImageCard extends StatelessWidget {
-  final String narmer;
-  final String citys;
+// class ImageCard extends StatelessWidget {
+//   final String narmer;
+//   final String citys;
 
-  const ImageCard({super.key, required this.narmer, required this.citys});
+//   const ImageCard({super.key, required this.narmer, required this.citys});
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias, // Обрезает изображение по границам Card
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16), // Закругленные углы
-      ),
-      elevation: 1, // Тень
-      child: Stack(
-        children: [
-          // Фоновое изображение
-          Positioned.fill(
-            child: Image.asset(
-              'assets/pngs/planes.png', // Любая ссылка на картинку
-              fit: BoxFit.cover, // Заполняет весь Card
-            ),
-          ),
-          // Затемнение фона для читаемости текста (опционально)
+//   @override
+//   Widget build(BuildContext context) {
+//     return Card(
+//       clipBehavior: Clip.antiAlias, // Обрезает изображение по границам Card
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(16), // Закругленные углы
+//       ),
+//       elevation: 1, // Тень
+//       child: Stack(
+//         children: [
+//           // Фоновое изображение
+//           Positioned.fill(
+//             child: Image.asset(
+//               'assets/pngs/planes.png', // Любая ссылка на картинку
+//               fit: BoxFit.cover, // Заполняет весь Card
+//             ),
+//           ),
+//           // Затемнение фона для читаемости текста (опционально)
 
-          // Текст по центру
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  narmer,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white, // Белый текст для контраста
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  citys,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white, // Белый текст для контраста
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//           // Текст по центру
+//           Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Text(
+//                   narmer,
+//                   style: TextStyle(
+//                     fontSize: 20,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.white, // Белый текст для контраста
+//                   ),
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 Text(
+//                   citys,
+//                   style: TextStyle(
+//                     fontSize: 16,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.white, // Белый текст для контраста
+//                   ),
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
