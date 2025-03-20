@@ -76,10 +76,19 @@ class _DescribeCardState extends State<DescribeCard> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Do you want to delete this Trip?',
+                'Do you really want to delete?',
                 style: TextStyle(
                   fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'interTight',
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'Once deleted, your data will be lost with no possibility of recovery',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
                   fontFamily: 'interTight',
                 ),
                 textAlign: TextAlign.center,
@@ -88,13 +97,22 @@ class _DescribeCardState extends State<DescribeCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffE9E9E9),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     child: Text(
-                      'Cancel',
+                      'Back',
                       style: TextStyle(fontSize: 16.sp, color: Colors.black),
                     ),
                   ),
+
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
@@ -103,11 +121,8 @@ class _DescribeCardState extends State<DescribeCard> {
                       ),
                     ),
                     onPressed: () async {
-                      var box = Hive.box<Trip>(
-                        'trips',
-                      ); // Получаем открытый бокс
+                      var box = Hive.box<Trip>('trips');
 
-                      // Поиск tripKey по названию
                       dynamic tripKeyToDelete;
                       for (var key in box.keys) {
                         var trip = box.get(key);
@@ -124,7 +139,7 @@ class _DescribeCardState extends State<DescribeCard> {
                         print('Trip не найден');
                       }
 
-                      Navigator.pop(context); // Закрываем модальное окно
+                      Navigator.pop(context);
                       Navigator.pop(context);
                     },
                     child: Text(
