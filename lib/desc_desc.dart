@@ -1,4 +1,4 @@
-import 'package:appp/describe_card.dart';
+import 'package:appp/finance.dart';
 import 'package:appp/places_in_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -175,14 +175,5 @@ class _DescDescState extends State<DescDesc> {
         ],
       ),
     );
-  }
-}
-
-class Finance extends StatelessWidget {
-  const Finance({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(child: Center(child: Text('Finance')));
   }
 }

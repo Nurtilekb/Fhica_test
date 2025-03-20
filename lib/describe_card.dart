@@ -1,4 +1,5 @@
 import 'package:appp/datas_of_city.dart';
+import 'package:appp/finance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -192,14 +193,5 @@ class HotelSirc extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class Finance extends StatelessWidget {
-  const Finance({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(child: Center(child: Text('Finance')));
   }
 }

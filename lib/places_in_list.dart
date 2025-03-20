@@ -23,6 +23,17 @@ class _ListPlacesState extends State<ListPlaces> {
                 nazvanke: 'Flowerwood Munich',
                 descrip: 'Kardonel-Straue 1, 80333 Munich',
               ),
+              Mesto(nazvanke: 'Shark', descrip: 'Shark Place, 80331 Munich'),
+              Mesto(
+                nazvanke: 'Tower',
+                descrip: 'Kardonel-Straue 1, 80333 Munich',
+              ),
+              Mesto(nazvanke: 'Lower', descrip: 'Lover Palace 1, 80638 Munich'),
+              Mesto(
+                nazvanke: 'Labrado',
+                descrip: 'Labrado Palace, 80331 Munich',
+              ),
+              Mesto(nazvanke: 'Inch', descrip: 'Inch Palace 1, 80638 Munich'),
             ]),
             _buildCategory('Sightseeing', [
               Mesto(
@@ -48,6 +59,17 @@ class _ListPlacesState extends State<ListPlaces> {
               Mesto(nazvanke: 'Inch', descrip: 'Inch Palace 1, 80638 Munich'),
             ]),
             _buildCategory('Museums', [
+              Mesto(nazvanke: 'Shark', descrip: 'Shark Place, 80331 Munich'),
+              Mesto(
+                nazvanke: 'Tower',
+                descrip: 'Kardonel-Straue 1, 80333 Munich',
+              ),
+              Mesto(nazvanke: 'Lower', descrip: 'Lover Palace 1, 80638 Munich'),
+              Mesto(
+                nazvanke: 'Labrado',
+                descrip: 'Labrado Palace, 80331 Munich',
+              ),
+              Mesto(nazvanke: 'Inch', descrip: 'Inch Palace 1, 80638 Munich'),
               Mesto(
                 nazvanke: 'German Museum',
                 descrip: 'German Museum, 80331 Munich',
@@ -97,7 +119,10 @@ class Mesto extends StatelessWidget {
         color: Color(0xffE9E9E9),
         borderRadius: BorderRadius.circular(10.r),
       ),
-      margin: EdgeInsets.symmetric(vertical: 5.h), // Меньший отступ
+      margin: EdgeInsets.symmetric(
+        vertical: 5.h,
+        horizontal: 5.w,
+      ), // Меньший отступ
       padding: EdgeInsets.all(10.r),
       width: 280.w, // Фиксированная ширина для элементов
       child: Row(
