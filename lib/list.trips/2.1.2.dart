@@ -1,83 +1,285 @@
-import 'package:appp/create_trip.dart';
+import 'package:appp/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart'; // Импортируем Hive
+import 'package:appp/create_trip.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-class Trip_creat extends StatelessWidget {
-  const Trip_creat({super.key});
+class Trip_creat extends StatefulWidget {
+  const Trip_creat({super.key, this.nametoTriptext});
+  final nametoTriptext;
+
+  @override
+  State<Trip_creat> createState() => _Trip_creatState();
+}
+
+class _Trip_creatState extends State<Trip_creat> {
+  List<Trip> trips = [];
+  late Box<Trip> tripBox;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTrips();
+    tripBox = Hive.box<Trip>('trips');
+  }
+
+  Future<void> _loadTrips() async {
+    var box = Hive.box<Trip>('trips');
+    print("    ${trips.length}    ");
+    setState(() {
+      trips = box.values.toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Color.fromARGB(0, 124, 233, 238),
-          padding: EdgeInsets.only(top: 90.h),
-          margin: EdgeInsets.symmetric(vertical: 15.h),
-          width: 343.w,
-          height: 594.h,
-          child: Column(
-            children: [
-              SizedBox(height: 40.h),
-              Image.asset('assets/pngs/roadmap.png', width: 164.w),
-              SizedBox(height: 15.h),
-              Text(
-                "You didn't create the trip",
+      body: ValueListenableBuilder(
+        valueListenable: tripBox.listenable(),
+        builder: (context, Box<Trip> box, _) {
+          if (box.isEmpty) {
+            return buildEmptyTripsUI(trips, context);
+          } else {
+            return buildTripsCard(box);
+          }
+        },
+      ),
+    );
+  }
 
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: "interTight",
-                  color: Color(0xFF07242F),
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 20.h),
-                  height: 66.h,
-                  width: 280.w,
-                  child: Text(
-                    "Create your first trippy inter-city trip!",
-                    textAlign: TextAlign.center,
-
-                    style: TextStyle(
-                      fontFamily: "interTight",
-                      color: Color(0xFF000000),
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
+  Widget buildTripsCard(Box<Trip> box) {
+    return Center(
+      child: Column(
+        children: [
+          Container(
+            height: 631.h,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 35.h),
+                    child: Text(
+                      'Trips Created',
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'interTight',
+                      ),
                     ),
                   ),
-                ),
-              ),
-              SizedBox(height: 70.h),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF00a5df),
-                  minimumSize: Size(343.w, 56.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(32.r),
+                  Container(
+                    margin: EdgeInsets.symmetric(vertical: 8.h),
+                    width: 343.w,
+                    child: Column(
+                      children: List.generate(box.length, (index) {
+                        final trip = box.getAt(index);
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 8.h),
+                          child: Container(
+                            height: 160.h,
+                            width: 343.w,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    trip!.name,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    trip.cities.join(', '),
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   ),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CreateTrip()),
-                  );
-                },
-                child: Text(
-                  'Create a trip',
-                  style: TextStyle(
-                    color: Color(0xFFEDFAFF),
-                    fontSize: 16.sp,
-                    fontFamily: "interTight",
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 16.h),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF00a5df),
+                minimumSize: Size(343.w, 56.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.r),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateTrip()),
+                ).then((_) => _loadTrips());
+              },
+              child: Text(
+                'Create a trip',
+                style: TextStyle(
+                  color: Color(0xFFEDFAFF),
+                  fontSize: 16.sp,
+                  fontFamily: "interTight",
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmptyTripsUI(dynamic trips, BuildContext context) {
+    return Center(
+      child: Container(
+        color: Color.fromARGB(0, 19, 221, 232),
+        padding: EdgeInsets.only(top: 90.h),
+        margin: EdgeInsets.symmetric(vertical: 15.h),
+        width: 343.w,
+        height: 594.h,
+        child: Column(
+          children: [
+            SizedBox(height: 40.h),
+            Image.asset('assets/pngs/roadmap.png', width: 164.w),
+            SizedBox(height: 15.h),
+            Text(
+              "You didn't create the trip",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: "interTight",
+                color: Color(0xFF07242F),
+                fontSize: 24.sp,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 20.h),
+                height: 66.h,
+                width: 280.w,
+                child: Text(
+                  "Create your first trippy inter-city trip!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: "interTight",
+                    color: Color(0xFF000000),
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ),
+            if (trips.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  itemCount: trips.length,
+                  itemBuilder: (context, index) {
+                    final trip = trips[index];
+                    // Предполагая, что каждая поездка - это Map<String, dynamic>
+                    final tripName = trip.name;
+                    final cities = trip.cities.join(', ');
+                    print("       ${tripName}         ");
+                    return ImageCard(narmer: tripName, citys: cities);
+                  },
+                ),
+              ),
+            SizedBox(height: 70.h),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF00a5df),
+                minimumSize: Size(343.w, 56.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(32.r),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CreateTrip()),
+                ).then((_) => _loadTrips());
+              },
+              child: Text(
+                'Create a trip',
+                style: TextStyle(
+                  color: Color(0xFFEDFAFF),
+                  fontSize: 16.sp,
+                  fontFamily: 'interTight',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class ImageCard extends StatelessWidget {
+  final String narmer;
+  final String citys;
+
+  const ImageCard({super.key, required this.narmer, required this.citys});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      clipBehavior: Clip.antiAlias, // Обрезает изображение по границам Card
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16), // Закругленные углы
+      ),
+      elevation: 1, // Тень
+      child: Stack(
+        children: [
+          // Фоновое изображение
+          Positioned.fill(
+            child: Image.asset(
+              'assets/pngs/planes.png', // Любая ссылка на картинку
+              fit: BoxFit.cover, // Заполняет весь Card
+            ),
+          ),
+          // Затемнение фона для читаемости текста (опционально)
+
+          // Текст по центру
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  narmer,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Белый текст для контраста
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  citys,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Белый текст для контраста
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
