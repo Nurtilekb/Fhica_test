@@ -2,9 +2,9 @@ import 'package:appp/describe_card.dart';
 import 'package:appp/trip_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart'; // Импортируем Hive
+import 'package:hive/hive.dart';
 import 'package:appp/create_trip.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:appp/theme/app_theme.dart';
 
 class Trip_creat extends StatefulWidget {
   const Trip_creat({super.key, this.nametoTriptext});
@@ -15,22 +15,12 @@ class Trip_creat extends StatefulWidget {
 }
 
 class _Trip_creatState extends State<Trip_creat> {
-  List<Trip> trips = [];
   late Box<Trip> tripBox;
 
   @override
   void initState() {
     super.initState();
-    _loadTrips();
     tripBox = Hive.box<Trip>('trips');
-  }
-
-  Future<void> _loadTrips() async {
-    var box = Hive.box<Trip>('trips');
-    print("    ${trips.length}    ");
-    setState(() {
-      trips = box.values.toList();
-    });
   }
 
   @override
@@ -40,16 +30,16 @@ class _Trip_creatState extends State<Trip_creat> {
         valueListenable: tripBox.listenable(),
         builder: (context, Box<Trip> box, _) {
           if (box.isEmpty) {
-            return __buildEmptyTripsUI(trips, context);
+            return _buildEmptyTripsUI(context);
           } else {
-            return buildTripsCard(box);
+            return _buildTripsCard(box);
           }
         },
       ),
     );
   }
 
-  Widget buildTripsCard(Box<Trip> box) {
+  Widget _buildTripsCard(Box<Trip> box) {
     return Center(
       child: Column(
         children: [
@@ -63,29 +53,27 @@ class _Trip_creatState extends State<Trip_creat> {
                     padding: EdgeInsets.only(top: 35.h),
                     child: Text(
                       'Trips Created',
-                      style: TextStyle(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'interTight',
-                      ),
+                      style: AppTheme.headingMedium(),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(vertical: 8.h),
                     width: 343.w,
-                    child: Column(
-                      children: List.generate(box.length, (index) {
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: box.length,
+                      itemBuilder: (context, index) {
                         final trip = box.getAt(index);
                         return InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (context) => DescribeCard(
-                                      cityies: trip.cities,
-                                      title: trip.name,
-                                    ),
+                                builder: (context) => DescribeCard(
+                                  cityies: trip.cities,
+                                  title: trip.name,
+                                ),
                               ),
                             );
                           },
@@ -96,8 +84,10 @@ class _Trip_creatState extends State<Trip_creat> {
                               children: [
                                 Positioned.fill(
                                   child: Image.asset(
-                                    'assets/pngs/planes.png', // Любая ссылка на картинку
-                                    fit: BoxFit.cover, // Заполняет весь Card
+                                    'assets/pngs/planes.png',
+                                    fit: BoxFit.cover,
+                                    cacheHeight: 160,
+                                    cacheWidth: 343,
                                   ),
                                 ),
                                 Container(
@@ -105,8 +95,7 @@ class _Trip_creatState extends State<Trip_creat> {
                                   width: 343.w,
                                   child: Center(
                                     child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           trip!.name,
@@ -114,63 +103,14 @@ class _Trip_creatState extends State<Trip_creat> {
                                             fontSize: 32.sp,
                                             fontWeight: FontWeight.w400,
                                             color: Colors.white,
-                                            fontFamily: 'interTight',
+                                            fontFamily: AppTheme.fontFamily,
                                           ),
                                         ),
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Container(
-                                              margin: EdgeInsets.all(4.w),
-                                              height: 23.h,
-
-                                              decoration: BoxDecoration(
-                                                color: Color.fromARGB(
-                                                  59,
-                                                  255,
-                                                  255,
-                                                  255,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(16.r),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  "  Places to visit: 39  ",
-                                                  style: TextStyle(
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.all(4.w),
-                                              height: 23.h,
-                                              width: 68.w,
-                                              decoration: BoxDecoration(
-                                                color: Color.fromARGB(
-                                                  59,
-                                                  255,
-                                                  255,
-                                                  255,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(16.r),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  "Cities: ${trip.cities.length.toString()}",
-                                                  style: TextStyle(
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
+                                            _buildChip("Places to visit: 39"),
+                                            _buildChip("Cities: ${trip.cities.length}"),
                                           ],
                                         ),
                                       ],
@@ -181,7 +121,7 @@ class _Trip_creatState extends State<Trip_creat> {
                             ),
                           ),
                         );
-                      }),
+                      },
                     ),
                   ),
                 ],
@@ -192,26 +132,21 @@ class _Trip_creatState extends State<Trip_creat> {
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF00a5df),
-                minimumSize: Size(343.w, 56.h),
+                backgroundColor: AppTheme.primaryColor,
+                minimumSize: Size(AppTheme.buttonWidth, AppTheme.buttonHeight),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.r),
+                  borderRadius: BorderRadius.circular(AppTheme.buttonRadius),
                 ),
               ),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CreateTrip()),
-                ).then((_) => _loadTrips());
+                );
               },
               child: Text(
                 'Create a trip',
-                style: TextStyle(
-                  color: Color(0xFFEDFAFF),
-                  fontSize: 16.sp,
-                  fontFamily: "interTight",
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTheme.buttonLabel(),
               ),
             ),
           ),
@@ -220,10 +155,29 @@ class _Trip_creatState extends State<Trip_creat> {
     );
   }
 
-  Widget __buildEmptyTripsUI(dynamic trips, BuildContext context) {
+  Widget _buildChip(String label) {
+    return Container(
+      margin: EdgeInsets.all(4.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+      decoration: BoxDecoration(
+        color: AppTheme.overlayWhite,
+        borderRadius: BorderRadius.circular(AppTheme.chipRadius),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 14.sp,
+          fontWeight: FontWeight.w400,
+          color: Colors.white,
+          fontFamily: AppTheme.fontFamily,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyTripsUI(BuildContext context) {
     return Center(
       child: Container(
-        color: Color.fromARGB(0, 19, 221, 232),
         padding: EdgeInsets.only(top: 90.h),
         margin: EdgeInsets.symmetric(vertical: 15.h),
         width: 343.w,
@@ -231,17 +185,12 @@ class _Trip_creatState extends State<Trip_creat> {
         child: Column(
           children: [
             SizedBox(height: 40.h),
-            Image.asset('assets/pngs/roadmap.png', width: 164.w),
+            Image.asset('assets/pngs/roadmap.png', width: 164.w, cacheHeight: 200),
             SizedBox(height: 15.h),
             Text(
               "You didn't create the trip",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: "interTight",
-                color: Color(0xFF07242F),
-                fontSize: 24.sp,
-                fontWeight: FontWeight.w800,
-              ),
+              style: AppTheme.headingLarge(),
             ),
             Expanded(
               child: Container(
@@ -251,39 +200,28 @@ class _Trip_creatState extends State<Trip_creat> {
                 child: Text(
                   "Create your first trippy inter-city trip!",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: "interTight",
-                    color: Color(0xFF000000),
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTheme.bodyLarge(),
                 ),
               ),
             ),
-
             SizedBox(height: 70.h),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF00a5df),
-                minimumSize: Size(343.w, 56.h),
+                backgroundColor: AppTheme.primaryColor,
+                minimumSize: Size(AppTheme.buttonWidth, AppTheme.buttonHeight),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32.r),
+                  borderRadius: BorderRadius.circular(AppTheme.buttonRadius),
                 ),
               ),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => CreateTrip()),
-                ).then((_) => _loadTrips());
+                );
               },
               child: Text(
                 'Create a trip',
-                style: TextStyle(
-                  color: Color(0xFFEDFAFF),
-                  fontSize: 16.sp,
-                  fontFamily: 'interTight',
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTheme.buttonLabel(),
               ),
             ),
           ],
